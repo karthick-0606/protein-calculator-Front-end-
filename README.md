@@ -68,3 +68,80 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Protein Calculator Frontend
+
+A modern, responsive web interface for the Protein Calculator application.
+
+## 🚀 How to Run
+
+### Option 1: Using Live Server (Recommended)
+
+1. Install the "Live Server" extension in VS Code
+2. Right-click on `index.html`
+3. Select "Open with Live Server"
+4. The application will open in your browser at `http://127.0.0.1:5500`
+
+### Option 2: Using Python HTTP Server
+
+```bash
+# Navigate to the frontend directory
+cd c:\Users\karth\p-backend\protein-calculator\frontend
+
+# Start Python HTTP server
+python -m http.server 8000
+
+# Open browser and navigate to:
+# http://localhost:8000
+```
+
+### Option 3: Double-Click
+
+Simply double-click `index.html` to open it in your default browser.
+
+## ✅ Prerequisites
+
+- Backend server must be running on `http://localhost:8080`
+- Modern web browser (Chrome, Firefox, Edge, Safari)
+
+## 🎯 Features
+
+- ➕ Add new users with name, weight, height, and fitness goal
+- 📊 View all users with calculated protein requirements
+- ✏️ Edit existing user details
+- 🔄 Refresh users list
+- 📱 Fully responsive design
+- 🎨 Modern UI with smooth animations
+- ✅ Real-time notifications
+
+## 🛠️ Technology Stack
+
+- Pure HTML5
+- CSS3 with modern features (Grid, Flexbox, Animations)
+- Vanilla JavaScript (ES6+)
+- Fetch API for backend communication
+
+## 📝 API Endpoints Used
+
+- `GET /api/protein` - Get all users
+- `GET /api/protein/{id}` - Get user by ID
+- `POST /api/protein` - Create new user
+- `PATCH /api/protein/{id}` - Update user
+
+## 🎨 Design Features
+
+- Gradient backgrounds
+- Card-based layout
+- Smooth animations and transitions
+- Hover effects
+- Modal dialogs
+- Toast notifications
+- Loading spinners
+- Responsive grid system
+
+## 📱 Responsive Breakpoints
+
+- Desktop: > 1024px
+- Tablet: 768px - 1024px
+- Mobile: < 768px
+- Small Mobile: < 480px

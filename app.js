@@ -1,0 +1,166 @@
+const API_URL = 'http://localhost:8080/api/protein';
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', () => {
+    loadUsers();
+    setupEventListeners();
+});
+
+// Setup event listeners
+function setupEventListeners() {
+    // Add user form
+    document.getElementById('userForm').addEventListener('submit', handleAddUser);
+    
+    // Edit user form
+    document.getElementById('editForm').addEventListener('submit', handleEditUser);
+}
+
+// Load all users
+async function loadUsers() {
+    const usersList = document.getElementById('usersList');
+    usersList.innerHTML = '<div class="loading">Loading users...</div>';
+    
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error('Failed to fetch users');
+        
+        const users = await response.json();
+        displayUsers(users);
+    } catch (error) {
+        console.error('Error loading users:', error);
+        usersList.innerHTML = `<div class="loading" style="color: #e53e3e;">❌ Failed to load users. Make sure the backend is running.</div>`;
+    }
+}
+
+// Display users
+function displayUsers(users) {
+    const usersList = document.getElementById('usersList');
+    
+    if (users.length === 0) {
+        usersList.innerHTML = '<div class="loading">📝 No users found. Add your first user!</div>';
+        return;
+    }
+    
+    usersList.innerHTML = users.map(user => `
+        <div class="user-card">
+            <div class="user-info">
+                <h3>${user.name}</h3>
+                <div class="user-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Weight:</span>
+                        <span class="detail-value">${user.weight} kg</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Height:</span>
+                        <span class="detail-value">${user.height} cm</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Goal:</span>
+                        <span class="detail-value">${capitalizeGoal(user.goal)}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="user-actions">
+                <div class="protein-badge">
+                    <div class="protein-amount">${user.proteinRequired.toFixed(1)}g</div>
+                    <div class="protein-label">Daily Protein</div>
+                </div>
+                <button onclick="openEditModal(${user.id})" class="btn btn-edit">
+                    ✏️ Edit
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Handle add user
+async function handleAddUser(e) {
+    e.preventDefault();
+    
+    const user = {
+        name: document.getElementById('name').value,
+        weight: parseFloat(document.getElementById('weight').value),
+        height: parseFloat(document.getElementById('height').value),
+        goal: document.getElementById('goal').value
+    };
+    
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        });
+        
+        if (!response.ok) throw new Error('Failed to add user');
+        
+        e.target.reset();
+        await loadUsers();
+        showNotification('✅ User added successfully!', 'success');
+    } catch (error) {
+        console.error('Error adding user:', error);
+        showNotification('❌ Failed to add user', 'error');
+    }
+}
+
+// Open edit modal
+async function openEditModal(id) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch user');
+        
+        const user = await response.json();
+        
+        document.getElementById('editId').value = user.id;
+        document.getElementById('editWeight').value = user.weight;
+        document.getElementById('editHeight').value = user.height;
+        document.getElementById('editGoal').value = user.goal;
+        
+        document.getElementById('editModal').style.display = 'block';
+    } catch (error) {
+        console.error('Error loading user:', error);
+        showNotification('❌ Failed to load user details', 'error');
+    }
+}
+
+// Handle edit user
+async function handleEditUser(e) {
+    e.preventDefault();
+    
+    const id = document.getElementById('editId').value;
+    const user = {
+        weight: parseFloat(document.getElementById('editWeight').value),
+        height: parseFloat(document.getElementById('editHeight').value),
+        goal: document.getElementById('editGoal').value
+    };
+    
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        });
+        
+        if (!response.ok) throw new Error('Failed to update user');
+        
+        closeModal();
+        await loadUsers();
+        showNotification('✅ User updated successfully!', 'success');
+    } catch (error) {
+        console.error('Error updating user:', error);
+        showNotification('❌ Failed to update user', 'error');
+    }
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+// Helper functions
+function capitalizeGoal(goal) {
+    return goal.charAt(0).toUpperCase() + goal.slice(1);
+}
+
+function showNotification(message, type) {
+    alert(message);
+}
