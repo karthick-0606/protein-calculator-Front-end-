@@ -1,4 +1,4 @@
-name: Frontend Build and SonarCloud Analysis
+name: SonarCloud Frontend Analysis
 
 on:
   push:
@@ -9,40 +9,30 @@ on:
       - main
 
 jobs:
-  build:
-    name: Frontend Sonar Scan
+  sonarcloud:
+    name: SonarCloud Scan
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # Step 2: Setup Node.js
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '18'
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Build React app
-      - name: Build React App
-        run: npm run build
-
-      # Step 5: SonarCloud Scan
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=karthick-0606_protein-calculator-Front-end
+            -Dsonar.projectKey=karthick-0606_protein-calculator-Front-end-
             -Dsonar.organization=karthick-0606
-            -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.sources=src
-            -Dsonar.exclusions=**/node_modules/**,**/build/**
