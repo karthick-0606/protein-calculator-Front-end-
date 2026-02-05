@@ -21,4 +21,6 @@ class ProteinService {
   }
 }
 
-export default new ProteinService();
+const proteinService = new ProteinService();
+
+export default proteinService;
