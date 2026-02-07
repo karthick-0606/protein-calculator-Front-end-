@@ -60,7 +60,7 @@ Quality Gate passed successfully ✅
 Backend is built using Spring Boot and deployed on Render.
 
 👉 Backend Repository:
-https://github.com/karthick-0606/proteincalculator-back-end
+https://github.com/karthick-0606/protein-calculator-back-end-.git
 
 👉 Live Backend URL:
 https://protein-calculator-back-end.onrender.com/api/protein
